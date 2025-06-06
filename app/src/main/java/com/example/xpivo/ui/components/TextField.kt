@@ -3,6 +3,8 @@ package com.example.xpivo.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,9 +32,11 @@ fun PrimaryBasicTextField(
     title: String? = null,
     enabled: Boolean = true,
     placeholder: String = "",
+    textModifier: Modifier = Modifier,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onValueChange: (String) -> Unit,
-    trailingIcon: @Composable () -> Unit = {}
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -47,7 +51,7 @@ fun PrimaryBasicTextField(
             placeholder = {
                 Text(text = placeholder, style = RegularStyle)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = textModifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = PrimaryBeige,
                 focusedContainerColor = PrimaryBeige,
@@ -66,9 +70,26 @@ fun PrimaryBasicTextField(
             shape = SimpleShape,
             visualTransformation = visualTransformation,
             trailingIcon = trailingIcon,
+            leadingIcon = leadingIcon,
             enabled = enabled
         )
     }
+}
+
+@Composable
+fun PrimaryBigTextField(value: String, onValueChange: (String) -> Unit) {
+    PrimaryBasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        textModifier = Modifier.height(144.dp)
+    )
+}
+
+@Composable
+@Preview
+fun PreviewPrimaryBigTextField() {
+    var value by remember { mutableStateOf("") }
+    PrimaryBigTextField(value = value, onValueChange = {it -> value = it})
 }
 
 @Composable

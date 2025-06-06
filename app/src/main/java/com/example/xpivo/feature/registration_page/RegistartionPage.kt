@@ -1,5 +1,6 @@
-package com.example.xpivo.feature.registrationPage
+package com.example.xpivo.feature.registration_page
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
@@ -22,13 +23,12 @@ import com.example.xpivo.ui.components.PrimaryPasswordTextField
 import com.example.xpivo.ui.theme.LargeStyle
 import com.example.xpivo.ui.theme.PrimaryBeige
 import com.example.xpivo.ui.theme.SmallTextStyle
-import com.example.xpivo.ui.theme.TitleStyle
 
 private val GENDER = mapOf(0 to "Мужской", 1 to "Женский")
 
 @Composable
 fun RegistrationPage() {
-
+    val activity = LocalActivity.current
     Column(
         modifier = Modifier.verticalScroll(state = rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -97,7 +97,7 @@ fun RegistrationPage() {
                 title = "Закрыть",
                 modifier = Modifier.fillMaxWidth(),
                 colorType = PrimaryBeige
-            ) { }
+            ) { activity?.onBackPressed() }
         }
     }
 }

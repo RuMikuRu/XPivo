@@ -1,4 +1,4 @@
-package com.example.xpivo.feature.loginPage
+package com.example.xpivo.feature.login_page
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +26,10 @@ import com.example.xpivo.ui.theme.SmallTextStyle
 import com.example.xpivo.ui.theme.TitleStyle
 
 @Composable
-fun LoginPage() {
+fun LoginPage(
+    onClickLogin: () -> Unit = {},
+    onClickRegistration: () -> Unit = {}
+) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Image(
             painter = painterResource(R.drawable.pivo_image),
@@ -35,7 +39,7 @@ fun LoginPage() {
         )
         Column(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(vertical = 16.dp)
                 .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -46,12 +50,15 @@ fun LoginPage() {
                 Text(text = "Запомнить меня", style = RegularStyle, modifier = Modifier.weight(1f))
                 PrimaryCheckBox(checked = false, onCheckedChange = {})
             }
-            PrimaryButton(title = "Войти", modifier = Modifier.fillMaxWidth()) { }
-            Text(
-                text = "Нет аккаунта? Зарегистрироваться",
-                style = SmallTextStyle,
-                textAlign = TextAlign.Center
-            )
+            PrimaryButton(title = "Войти", modifier = Modifier.fillMaxWidth()) { onClickLogin.invoke()}
+            TextButton(onClickRegistration) {
+                Text(
+                    text = "Нет аккаунта? Зарегистрироваться",
+                    style = SmallTextStyle,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

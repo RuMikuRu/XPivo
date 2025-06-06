@@ -2,8 +2,15 @@ package com.example.xpivo.ui.components
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,30 +42,36 @@ fun PrimaryButton(
 }
 
 @Composable
-fun PrimaryFilterButton(title: String, selected: Boolean, onClick: () -> Unit) {
-    Button(
-        onClick = { onClick.invoke() },
-        shape = SimpleShape,
-        enabled = !selected,
-        colors = ButtonDefaults.buttonColors(
+fun PrimaryFilterChip(
+    title: String,
+    selected: Boolean,
+    onClick: (Boolean) -> Unit
+) {
+    FilterChip(
+        selected = selected,
+        onClick = { onClick(!selected) }, // <- Переключение состояния
+        label = {
+            Text(text = title, style = TitleFilterStyle)
+        },
+        colors = FilterChipDefaults.filterChipColors(
             containerColor = PrimaryBeige,
-            disabledContainerColor = PrimaryBrown
-        )
-    ) {
-        Text(text = title, style = TitleFilterStyle)
-    }
+            selectedContainerColor = PrimaryBrown
+        ),
+        shape = SimpleShape,
+        border = null
+    )
 }
 
 @Composable
 @Preview
 private fun PreviewSelectedPrimaryFilterButton() {
-    PrimaryFilterButton(title = "Автор", selected = true) { }
-}
+    var selected by remember { mutableStateOf(false) }
 
-@Composable
-@Preview
-private fun PreviewUnSelectedPrimaryFilterButton() {
-    PrimaryFilterButton(title = "Автор", selected = false) { }
+    PrimaryFilterChip(
+        title = "Фильтр",
+        selected = selected,
+        onClick = { selected = it }
+    )
 }
 
 

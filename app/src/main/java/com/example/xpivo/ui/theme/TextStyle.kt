@@ -35,6 +35,13 @@ val TitleStyle = TextStyle(
     textAlign = TextAlign.Center
 )
 
+val ArticleStyle = TextStyle(
+    fontSize = 22.sp,
+    fontWeight = FontWeight.Bold,
+    fontFamily = FontFamily.SansSerif,
+    color = PrimaryBlack
+)
+
 val SmallTextStyle = TextStyle(
     fontSize = 14.sp,
     fontFamily = FontFamily.SansSerif,

@@ -61,6 +61,7 @@ fun PrimaryBigArticleCard(status: String, title: String, description: String) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PrimaryWhite),
         shape = SimpleShape,
+        modifier = Modifier.padding(vertical = 12.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             TextContentBigCard(

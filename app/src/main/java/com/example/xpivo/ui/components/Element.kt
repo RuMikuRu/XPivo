@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
@@ -29,9 +32,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.example.xpivo.R
 import com.example.xpivo.ui.theme.PrimaryBeige
 import com.example.xpivo.ui.theme.PrimaryBrown
+import com.example.xpivo.ui.theme.PrimaryWhite
+import com.example.xpivo.ui.theme.SimpleShape
+import com.example.xpivo.ui.theme.TitleFilterStyle
 
 @Composable
 fun PrimaryCheckBox(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
@@ -58,6 +65,18 @@ fun ImageProfile(image: ImageBitmap? = null, onClick: () -> Unit) {
         )
     } else {
         Image(bitmap = image, contentDescription = null)
+    }
+}
+
+@Composable
+fun ImageArticle(image: ImageBitmap? = null) {
+    if (image == null){
+        Image(
+            painter = painterResource(R.drawable.image_profile_placeholder),
+            modifier = Modifier.fillMaxWidth().height(320.dp),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
     }
 }
 
@@ -104,10 +123,28 @@ fun PrimaryDropDownMenu(
 }
 
 @Composable
+fun PrimaryTag(text: String) {
+    Box(
+        modifier = Modifier
+            .background(color = PrimaryBeige, shape = SimpleShape)
+            .widthIn(min = 99.dp).height(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(text = text, style = TitleFilterStyle, modifier = Modifier.padding(horizontal = 16.dp))
+    }
+}
+
+@Composable
+@Preview
+private fun PreviewPrimaryTag() {
+    PrimaryTag(text = "Пиво")
+}
+
+@Composable
 @Preview
 private fun PreviewDropDownMenu() {
     val content = mapOf<Int, String>(0 to "Мужской", 1 to "Женский")
-    PrimaryDropDownMenu(content, onValueChange = {it, it1 ->})
+    PrimaryDropDownMenu(content, onValueChange = { it, it1 -> })
 }
 
 @Composable
