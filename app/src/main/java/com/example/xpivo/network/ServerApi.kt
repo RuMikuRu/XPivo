@@ -6,6 +6,7 @@ import com.example.xpivo.data.response.LoginResponse
 import com.example.xpivo.data.response.RegisterResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ServerApi {
@@ -15,5 +16,6 @@ interface ServerApi {
     @POST("register")
     suspend fun register(@Body registerRequest: RegisterRequest): Call<RegisterResponse>
 
-
+    @POST("logout")
+    suspend fun logout()
 }
