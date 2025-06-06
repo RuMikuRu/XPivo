@@ -1,5 +1,6 @@
 package com.example.xpivo.network
 
+import com.example.xpivo.core.AuthRequired
 import com.example.xpivo.data.request.LoginRequest
 import com.example.xpivo.data.request.RegisterRequest
 import com.example.xpivo.data.response.LoginResponse
@@ -17,5 +18,8 @@ interface ServerApi {
     suspend fun register(@Body registerRequest: RegisterRequest): Call<RegisterResponse>
 
     @POST("logout")
+    @AuthRequired
     suspend fun logout()
+
+
 }

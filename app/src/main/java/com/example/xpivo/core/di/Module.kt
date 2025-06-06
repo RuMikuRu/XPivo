@@ -1,10 +1,12 @@
 package com.example.xpivo.core.di
 
+import android.content.Context
 import com.example.xpivo.network.ServerApi
 import com.example.xpivo.network.interceptor.AuthInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -17,10 +19,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        @ApplicationContext context: Context
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(AuthInterceptor(){
-                "d;d"
+                val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
+                prefs.getString("access_token", null)
             })
             .build()
     }
