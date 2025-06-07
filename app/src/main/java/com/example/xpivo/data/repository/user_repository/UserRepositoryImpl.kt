@@ -21,6 +21,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun login(email: String, password: String): Boolean {
         val token = service.login(email, password).userToken
         this.log("token = $token")
+        Log.d("UserRepository", "login: $token")
         return if (token.isNotBlank()) {
             dataStore.saveToken(token)
             true

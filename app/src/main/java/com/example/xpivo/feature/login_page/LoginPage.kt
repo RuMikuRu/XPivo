@@ -9,6 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -16,7 +21,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.xpivo.R
+import com.example.xpivo.core.util.log
+import com.example.xpivo.core.view_model.Lce
+import com.example.xpivo.navigation.Screen
 import com.example.xpivo.ui.components.PrimaryBasicTextField
 import com.example.xpivo.ui.components.PrimaryButton
 import com.example.xpivo.ui.components.PrimaryCheckBox
@@ -27,9 +38,25 @@ import com.example.xpivo.ui.theme.TitleStyle
 
 @Composable
 fun LoginPage(
+    viewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
+    navController: NavHostController,
     onClickLogin: () -> Unit = {},
     onClickRegistration: () -> Unit = {}
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var rememberMe by remember { mutableStateOf(false) }
+    val loginState by viewModel.loginState.collectAsState()
+    when(val state = loginState) {
+        is Lce.Content<Boolean?> -> {
+            if (state.data == true) {
+                navController.popBackStack()
+                navController.navigate(Screen.RegistrationPage.route)
+            }
+        }
+        is Lce.Error -> {}
+        Lce.Loading -> {}
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         Image(
             painter = painterResource(R.drawable.pivo_image),
@@ -44,13 +71,24 @@ fun LoginPage(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(text = "С возвращением", style = TitleStyle, modifier = Modifier.fillMaxWidth())
-            PrimaryBasicTextField(value = "", placeholder = "Имя пользователя", onValueChange = {})
-            PrimaryPasswordTextField(value = "", placeholder = "Пароль", onValueChange = {})
+            PrimaryBasicTextField(
+                value = email,
+                placeholder = "Email",
+                onValueChange = { it -> email = it })
+            PrimaryPasswordTextField(
+                value = password,
+                placeholder = "Пароль",
+                onValueChange = { it -> password = it })
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Запомнить меня", style = RegularStyle, modifier = Modifier.weight(1f))
-                PrimaryCheckBox(checked = false, onCheckedChange = {})
+                PrimaryCheckBox(checked = rememberMe, onCheckedChange = {it ->  rememberMe = it})
             }
-            PrimaryButton(title = "Войти", modifier = Modifier.fillMaxWidth()) { onClickLogin.invoke()}
+            PrimaryButton(
+                title = "Войти",
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                viewModel.login(email, password)
+            }
             TextButton(onClickRegistration) {
                 Text(
                     text = "Нет аккаунта? Зарегистрироваться",
@@ -66,5 +104,5 @@ fun LoginPage(
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFFFFFFFF)
 private fun PreviewLoginPage() {
-    LoginPage()
+    //  LoginPage()
 }

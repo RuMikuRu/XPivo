@@ -20,7 +20,7 @@ abstract class BaseViewModel(@ApplicationContext context: Context) : ViewModel()
     protected fun <T> stateFlowWithLce(
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
         block: suspend () -> T,
-        retry: () -> Unit
+        retry: (() -> Unit)? = null
     ): StateFlow<Lce<T>> {
         val state = MutableStateFlow<Lce<T>>(Lce.Loading)
 

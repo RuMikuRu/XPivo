@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
 }
 
@@ -42,12 +42,13 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
     implementation(libs.converter.gson)
     implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
+    ksp (libs.dagger.compiler)
+    ksp (libs.hilt.compiler)
     implementation(libs.gson)
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization.json)

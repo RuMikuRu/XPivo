@@ -3,8 +3,11 @@ package com.example.xpivo.core.di
 import android.content.Context
 import com.example.xpivo.core.util.NetworkState
 import com.example.xpivo.data.cache.DataStoreCache
+import com.example.xpivo.data.repository.user_repository.IUserRepository
+import com.example.xpivo.data.repository.user_repository.UserRepositoryImpl
 import com.example.xpivo.network.ServerApi
 import com.example.xpivo.network.ServerResponse
+import com.example.xpivo.network.Service
 import com.example.xpivo.network.interceptor.AuthInterceptor
 import com.google.gson.Gson
 import dagger.Module
@@ -45,7 +48,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://localhost:5091/")
+            .baseUrl("http://10.8.1.11:5091/")
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -74,6 +77,16 @@ object NetworkModule {
     fun provideServerResponse(gson: Gson): ServerResponse {
         return ServerResponse(gson)
     }
+
+    @Provides
+    @Singleton
+    fun provideService(
+        serviceApi: ServerApi,
+        networkState: NetworkState,
+        serverResponse: ServerResponse
+    ): Service {
+        return Service(serviceApi, networkState, serverResponse)
+    }
 }
 
 @Module
@@ -83,5 +96,15 @@ object CacheModule {
     @Singleton
     fun provideDataStoreCache(@ApplicationContext context: Context): DataStoreCache {
         return DataStoreCache(context)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object RepositoryModule {
+    @Provides
+    @Singleton
+    fun provideUserRepository(service: Service, dataStoreCache: DataStoreCache): IUserRepository {
+        return UserRepositoryImpl(service, dataStoreCache)
     }
 }
