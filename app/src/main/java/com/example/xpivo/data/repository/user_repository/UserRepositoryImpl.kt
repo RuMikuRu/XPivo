@@ -1,5 +1,7 @@
 package com.example.xpivo.data.repository.user_repository
 
+import android.util.Log
+import com.example.xpivo.core.util.log
 import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.data.model.User
 import com.example.xpivo.data.request.LoginRequest
@@ -18,6 +20,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun login(email: String, password: String): Boolean {
         val token = service.login(email, password).userToken
+        this.log("token = $token")
         return if (token.isNotBlank()) {
             dataStore.saveToken(token)
             true
