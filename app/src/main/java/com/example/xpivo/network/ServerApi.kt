@@ -20,6 +20,4 @@ interface ServerApi {
     @POST("logout")
     @AuthRequired
     suspend fun logout()
-
-
 }

@@ -1,6 +1,7 @@
 package com.example.xpivo.core.di
 
 import android.content.Context
+import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.network.ServerApi
 import com.example.xpivo.network.interceptor.AuthInterceptor
 import dagger.Module
@@ -44,5 +45,15 @@ object NetworkModule {
     @Singleton
     fun provideApiService(retrofit: Retrofit): ServerApi {
         return retrofit.create(ServerApi::class.java)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object CacheModule {
+    @Provides
+    @Singleton
+    fun provideDataStoreCache(@ApplicationContext context: Context) : DataStoreCache {
+        return DataStoreCache(context)
     }
 }
