@@ -4,5 +4,5 @@ import com.example.xpivo.data.model.User
 
 interface IUserRepository {
     suspend fun userRegistration(user: User)
-    suspend fun login(email:String, password:String) : Boolean
+    suspend fun login(email: String, password: String, rememberMe: Boolean) : Boolean
 }

@@ -2,14 +2,12 @@ package com.example.xpivo.feature.login_page
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.viewModelScope
 import com.example.xpivo.core.view_model.BaseViewModel
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.repository.user_repository.IUserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,10 +20,10 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel(context) {
     val loginState = MutableStateFlow<Lce<Boolean?>>(Lce.Content(null))
 
-    fun login(email:String, password: String) {
+    fun login(email: String, password: String, rememberMe: Boolean) {
         val newStateFlow = stateFlowWithLce(block = {
-            Log.d("LoginViewModel", "login: tyt")
-            userRepository.login(email, password)
+            Log.d("LoginViewModel", "login: $rememberMe")
+            userRepository.login(email, password, rememberMe)
         })
 
         viewModelScope.launch {

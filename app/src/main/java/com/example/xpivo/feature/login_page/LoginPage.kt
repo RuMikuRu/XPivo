@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,10 +24,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.xpivo.R
-import com.example.xpivo.core.util.log
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.navigation.Screen
 import com.example.xpivo.ui.components.PrimaryBasicTextField
@@ -43,9 +43,9 @@ fun LoginPage(
     onClickLogin: () -> Unit = {},
     onClickRegistration: () -> Unit = {}
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var rememberMe by remember { mutableStateOf(false) }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var rememberMe by rememberSaveable { mutableStateOf(false) }
     val loginState by viewModel.loginState.collectAsState()
     when(val state = loginState) {
         is Lce.Content<Boolean?> -> {
@@ -87,7 +87,7 @@ fun LoginPage(
                 title = "Войти",
                 modifier = Modifier.fillMaxWidth()
             ) {
-                viewModel.login(email, password)
+                viewModel.login(email, password, rememberMe)
             }
             TextButton(onClickRegistration) {
                 Text(
