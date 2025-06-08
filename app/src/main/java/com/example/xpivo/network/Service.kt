@@ -44,16 +44,4 @@ class Service(
     suspend fun getArticles() : List<Article> {
         return serverApi.getArticles()
     }
-
-    suspend fun <T> execute(tCall: T): T {
-        Log.d("Service", "execute:tyt ")
-        try {
-            if (networkState.hasOnlineNetwork()) {
-                tCall
-            }
-            throw Exception()
-        } catch (e: IOException) {
-            throw Exception(e.message)
-        }
-    }
 }
