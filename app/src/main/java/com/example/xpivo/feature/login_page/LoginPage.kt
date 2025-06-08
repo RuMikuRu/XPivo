@@ -56,49 +56,52 @@ fun LoginPage(
         }
         is Lce.Error -> {}
         Lce.Loading -> {}
-    }
-    Column(modifier = Modifier.fillMaxWidth()) {
-        Image(
-            painter = painterResource(R.drawable.pivo_image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Column(
-            modifier = Modifier
-                .padding(vertical = 16.dp)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Text(text = "С возвращением", style = TitleStyle, modifier = Modifier.fillMaxWidth())
-            PrimaryBasicTextField(
-                value = email,
-                placeholder = "Email",
-                onValueChange = { it -> email = it })
-            PrimaryPasswordTextField(
-                value = password,
-                placeholder = "Пароль",
-                onValueChange = { it -> password = it })
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Запомнить меня", style = RegularStyle, modifier = Modifier.weight(1f))
-                PrimaryCheckBox(checked = rememberMe, onCheckedChange = {it ->  rememberMe = it})
-            }
-            PrimaryButton(
-                title = "Войти",
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                viewModel.login(email, password, rememberMe)
-            }
-            TextButton(onClickRegistration) {
-                Text(
-                    text = "Нет аккаунта? Зарегистрироваться",
-                    style = SmallTextStyle,
-                    textAlign = TextAlign.Center,
+        is Lce.Ready<*> -> {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(R.drawable.pivo_image),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxWidth()
                 )
+                Column(
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(text = "С возвращением", style = TitleStyle, modifier = Modifier.fillMaxWidth())
+                    PrimaryBasicTextField(
+                        value = email,
+                        placeholder = "Email",
+                        onValueChange = { it -> email = it })
+                    PrimaryPasswordTextField(
+                        value = password,
+                        placeholder = "Пароль",
+                        onValueChange = { it -> password = it })
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = "Запомнить меня", style = RegularStyle, modifier = Modifier.weight(1f))
+                        PrimaryCheckBox(checked = rememberMe, onCheckedChange = {it ->  rememberMe = it})
+                    }
+                    PrimaryButton(
+                        title = "Войти",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        viewModel.login(email, password, rememberMe)
+                    }
+                    TextButton(onClickRegistration) {
+                        Text(
+                            text = "Нет аккаунта? Зарегистрироваться",
+                            style = SmallTextStyle,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
             }
         }
     }
+
 }
 
 @Composable

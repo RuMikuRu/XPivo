@@ -18,7 +18,7 @@ class LoginViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val userRepository: IUserRepository
 ) : BaseViewModel(context) {
-    val loginState = MutableStateFlow<Lce<Boolean?>>(Lce.Content(null))
+    val loginState = MutableStateFlow<Lce<Boolean?>>(Lce.Ready(null))
 
     fun login(email: String, password: String, rememberMe: Boolean) {
         val newStateFlow = stateFlowWithLce(block = {

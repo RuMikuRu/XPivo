@@ -11,10 +11,10 @@ data class User(
     val password:String,
     val rememberMe: Boolean
 ) {
-    fun getGender() = gender.name
+    fun getGender() = gender.value
 }
 
-enum class Gender(value: String) {
+enum class Gender(val value: String) {
     MALE("Мужской"),
     FEMALE("Женский")
 }

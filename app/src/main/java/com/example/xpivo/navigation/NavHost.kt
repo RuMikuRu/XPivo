@@ -42,7 +42,7 @@ fun PrimaryNavHost(
                 )
             }
             composable(Screen.RegistrationPage.route) {
-                RegistrationPage()
+                RegistrationPage(navController)
             }
             composable(Screen.ArticlesPage.route) {
                 ArticlesPage()

@@ -5,6 +5,7 @@ import com.example.xpivo.core.util.NetworkState
 import com.example.xpivo.data.model.User
 import com.example.xpivo.data.request.LoginRequest
 import com.example.xpivo.data.request.RegisterRequest
+import com.example.xpivo.data.response.Article
 import com.example.xpivo.data.response.LoginResponse
 import retrofit2.Call
 import java.io.IOException
@@ -32,21 +33,23 @@ class Service(
 
     suspend fun login(email: String, password: String): LoginResponse {
         try {
-            Log.d("Service", "login: before execute")
             val request = LoginRequest(email = email, password = password)
-            Log.d("Service", "login: request = $request")
-            return serverApi.login(request)  // <- Падает ли здесь?
+            return execute(serverApi.login(request))
         } catch (e: Exception) {
             Log.e("Service", "login: error before execute", e)
             throw e
         }
     }
 
-    suspend fun <T> execute(tCall: Call<T>): T {
+    suspend fun getArticles() : List<Article> {
+        return execute(serverApi.getArticles())
+    }
+
+    suspend fun <T> execute(tCall: T): T {
         Log.d("Service", "execute:tyt ")
         try {
             if (networkState.hasOnlineNetwork()) {
-                tCall.execute()
+                tCall
             }
             throw Exception()
         } catch (e: IOException) {

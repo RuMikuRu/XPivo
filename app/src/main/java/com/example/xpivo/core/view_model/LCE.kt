@@ -2,6 +2,7 @@ package com.example.xpivo.core.view_model
 
 sealed class Lce<out T> {
     object Loading : Lce<Nothing>()
+    data class Ready<T>(val data: T) : Lce<T>()
     data class Content<T>(val data: T) : Lce<T>()
     data class Error(val throwable: Throwable, val retry: (() -> Unit)? = null) : Lce<Nothing>()
 }

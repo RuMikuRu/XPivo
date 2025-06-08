@@ -3,6 +3,8 @@ package com.example.xpivo.core.di
 import android.content.Context
 import com.example.xpivo.core.util.NetworkState
 import com.example.xpivo.data.cache.DataStoreCache
+import com.example.xpivo.data.repository.article_repository.ArticlesRepositoryImpl
+import com.example.xpivo.data.repository.article_repository.IArticlesRepository
 import com.example.xpivo.data.repository.user_repository.IUserRepository
 import com.example.xpivo.data.repository.user_repository.UserRepositoryImpl
 import com.example.xpivo.network.ServerApi
@@ -106,5 +108,11 @@ object RepositoryModule {
     @Singleton
     fun provideUserRepository(service: Service, dataStoreCache: DataStoreCache): IUserRepository {
         return UserRepositoryImpl(service, dataStoreCache)
+    }
+
+    @Provides
+    @Singleton
+    fun provideArticlesRepository(service: Service): IArticlesRepository {
+        return ArticlesRepositoryImpl(service)
     }
 }
