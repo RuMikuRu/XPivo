@@ -24,7 +24,7 @@ fun PrimaryNavHost(
     val authToken by viewModel.authToken.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
     val startDestination = if (authToken.isNotEmpty()) {
-        Screen.RegistrationPage.route
+        Screen.ArticlesPage.route
     } else {
         Screen.LoginPage.route
     }

@@ -7,13 +7,13 @@ data class Article(
     val id: Int,
 
     @SerializedName("title")
-    val title: String,
+    val title: String?,
 
     @SerializedName("description")
-    val description: String,
+    val description: String? = "",
 
     @SerializedName("author")
-    val author: Author,
+    val author: Author? = null,
 
     @SerializedName("tags")
     val tags: List<String> = emptyList(),
@@ -22,24 +22,24 @@ data class Article(
     val images: List<Image> = emptyList(),
 
     @SerializedName("createdAt")
-    val createdAt: String,
+    val createdAt: String?,
 
     @SerializedName("publishedAt")
-    val publishedAt: String,
+    val publishedAt: String?,
 
     @SerializedName("updatedAt")
-    val updatedAt: String
+    val updatedAt: String?
 )
 
 data class Author(
     @SerializedName("id")
-    val id: Int,
+    val id: Int?,
 
     @SerializedName("username")
-    val username: String
+    val username: String?
 )
 
 data class Image(
     @SerializedName("id")
-    val id: Int
+    val id: Int?
 )

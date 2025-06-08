@@ -51,7 +51,7 @@ fun LoginPage(
         is Lce.Content<Boolean?> -> {
             if (state.data == true) {
                 navController.popBackStack()
-                navController.navigate(Screen.RegistrationPage.route)
+                navController.navigate(Screen.ArticlesPage.route)
             }
         }
         is Lce.Error -> {}

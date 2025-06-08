@@ -28,13 +28,13 @@ class Service(
             passwordHash = user.password,
             rememberMe = user.rememberMe
         )
-        execute(serverApi.register(request))
+        serverApi.register(request)
     }
 
     suspend fun login(email: String, password: String): LoginResponse {
         try {
             val request = LoginRequest(email = email, password = password)
-            return execute(serverApi.login(request))
+            return serverApi.login(request)
         } catch (e: Exception) {
             Log.e("Service", "login: error before execute", e)
             throw e
@@ -42,7 +42,7 @@ class Service(
     }
 
     suspend fun getArticles() : List<Article> {
-        return execute(serverApi.getArticles())
+        return serverApi.getArticles()
     }
 
     suspend fun <T> execute(tCall: T): T {
