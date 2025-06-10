@@ -7,72 +7,74 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.xpivo.data.model.Article
 import com.example.xpivo.data.model.ArticleStatus
 import com.example.xpivo.ui.components.CustomTabLayout
 import com.example.xpivo.ui.components.PrimaryBigArticleCard
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.xpivo.core.view_model.Lce
+import com.example.xpivo.data.response.DetailArticleResponse
 
 @Composable
-fun UserArticlePage(mockData: List<Article> = listOf()) {
+fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
+    val articles by viewModel.articles.collectAsState()
+
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item {
-            CustomTabLayout(selectedTab = selectedTab) { selectedTab = it }
-        }
-        when (selectedTab) {
-            0 -> items(items = mockData.filter { article -> article.status != ArticleStatus.Draft }) { article ->
-                PrimaryBigArticleCard(
-                    status = article.status.name,
-                    title = article.title,
-                    description = article.description
-                )
+        when (articles) {
+            is Lce.Content<List<DetailArticleResponse>> -> {
+                val articlesData = (articles as Lce.Content<List<DetailArticleResponse>>).data
+                item {
+                    CustomTabLayout(selectedTab = selectedTab) { selectedTab = it }
+                }
+                when (selectedTab) {
+                    0 -> items(items = articlesData.filter { article -> article.getStatus() != ArticleStatus.Draft }) { article ->
+                        PrimaryBigArticleCard(
+                            status = article.status,
+                            title = article.title,
+                            description = article.description
+                        )
+                    }
+
+                    1 -> items(items = articlesData.filter { article -> article.getStatus() == ArticleStatus.Draft }) { article ->
+                        PrimaryBigArticleCard(
+                            status = article.status,
+                            title = article.title,
+                            description = article.description
+                        )
+                    }
+                }
             }
 
-            1 -> items(items = mockData.filter { article -> article.status == ArticleStatus.Draft }) { article ->
-                PrimaryBigArticleCard(
-                    status = article.status.name,
-                    title = article.title,
-                    description = article.description
-                )
+            is Lce.Error -> {
+                item {
+                    Text(text = "Error")
+                }
+            }
+
+            Lce.Loading -> {
+                item {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is Lce.Ready<*> -> {
+                item {
+                    CircularProgressIndicator()
+                }
             }
         }
     }
+
 }
 
 @Composable
 @Preview
 private fun PreviewUserArticlePage() {
-    val mockData = listOf<Article>(
-        Article(
-            id = 0,
-            title = "title",
-            description = "description",
-            body = "body",
-            createdAt = "createdAt",
-            status = ArticleStatus.Draft,
-            images = listOf()
-        ),
-        Article(
-            id = 0,
-            title = "title",
-            description = "description",
-            body = "body",
-            createdAt = "createdAt",
-            status = ArticleStatus.Published,
-            images = listOf()
-        ),
-        Article(
-            id = 0,
-            title = "title",
-            description = "description",
-            body = "body",
-            createdAt = "createdAt",
-            status = ArticleStatus.Review,
-            images = listOf()
-        ),
-    )
-    UserArticlePage(mockData)
+    UserArticlePage()
 }

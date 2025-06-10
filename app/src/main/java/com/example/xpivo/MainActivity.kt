@@ -1,7 +1,6 @@
 package com.example.xpivo
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -9,38 +8,56 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import com.example.xpivo.data.cache.DataStoreCache
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.xpivo.navigation.PrimaryNavHost
+import com.example.xpivo.navigation.Screen
+import androidx.compose.runtime.getValue
+import com.example.xpivo.ui.components.PrimaryNavBar
+import com.example.xpivo.ui.components.SelectedMenuNavBar
 import com.example.xpivo.ui.theme.PrimaryWhite
 import com.example.xpivo.ui.theme.XPivoTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private lateinit var dataStoreCache: DataStoreCache
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+
+            val showBottomBar = currentRoute != Screen.LoginPage.route &&
+                    currentRoute != Screen.RegistrationPage.route
+
             XPivoTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    containerColor = PrimaryWhite
+                    containerColor = PrimaryWhite,
+                    bottomBar = {
+                        if (showBottomBar) {
+                            PrimaryNavBar(
+                                startSelected = when (currentRoute) {
+                                    Screen.ArticlesPage.route -> SelectedMenuNavBar.ARTICLES
+                                    else -> SelectedMenuNavBar.NONE
+                                },
+                                onClickArticles = {
+                                    navController.navigate(Screen.ArticlesPage.route) {
+                                        popUpTo(Screen.ArticlesPage.route) { inclusive = true }
+                                    }
+                                },
+                                onClickAddArticle = { navController.navigate(Screen.UserArticlePage.route) {
+                                    popUpTo(Screen.UserArticlePage.route) { inclusive = true }
+                                } },
+                                onClickProfile = { /* TODO */ }
+                            )
+                        }
+                    }
                 ) { innerPadding ->
                     Column(
                         modifier = Modifier.padding(
@@ -50,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             end = 16.dp
                         )
                     ) {
-                        PrimaryNavHost()
+                        PrimaryNavHost(navController = navController)
                     }
                 }
             }

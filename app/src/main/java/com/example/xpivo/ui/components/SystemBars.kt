@@ -163,7 +163,8 @@ fun PrimaryNavBar(
 enum class SelectedMenuNavBar {
     ARTICLES,
     ADD_ARTICLE,
-    PROFILE
+    PROFILE,
+    NONE
 }
 
 @Composable

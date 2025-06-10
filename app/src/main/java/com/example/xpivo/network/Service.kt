@@ -50,4 +50,8 @@ class Service(
     suspend fun getArticles(): List<Article> {
         return serverApi.getArticles()
     }
+
+    suspend fun getArticleByUserId(id: Int): List<DetailArticleResponse> {
+        return serverApi.getArticlesByAuthorId(id)
+    }
 }

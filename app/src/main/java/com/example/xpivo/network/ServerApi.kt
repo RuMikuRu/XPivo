@@ -31,4 +31,7 @@ interface ServerApi {
     @AuthRequired
     suspend fun getArticleById(@Path("id") id: Int): DetailArticleResponse
 
+    @GET("article/author/{authorId}")
+    @AuthRequired
+    suspend fun getArticlesByAuthorId(@Path("authorId") authorId: Int): List<DetailArticleResponse>
 }

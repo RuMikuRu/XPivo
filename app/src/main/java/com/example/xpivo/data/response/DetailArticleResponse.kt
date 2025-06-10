@@ -1,5 +1,6 @@
 package com.example.xpivo.data.response
 
+import com.example.xpivo.data.model.ArticleStatus
 import com.google.gson.annotations.SerializedName
 
 data class DetailArticleResponse(
@@ -29,4 +30,13 @@ data class DetailArticleResponse(
 
     @SerializedName("tags")
     val tags: List<String> = emptyList()
-)
+) {
+    fun getStatus(): ArticleStatus {
+        when (this.status) {
+            "черновик" -> return ArticleStatus.Draft
+            "опубликовано" -> return ArticleStatus.Published
+            "На рассмотрении" -> return ArticleStatus.Review
+        }
+        return ArticleStatus.Draft
+    }
+}

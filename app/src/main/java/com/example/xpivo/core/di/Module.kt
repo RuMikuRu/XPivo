@@ -112,7 +112,7 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideArticlesRepository(service: Service): IArticlesRepository {
-        return ArticlesRepositoryImpl(service)
+    fun provideArticlesRepository(service: Service, dataStoreCache: DataStoreCache): IArticlesRepository {
+        return ArticlesRepositoryImpl(service, dataStoreCache)
     }
 }

@@ -6,4 +6,5 @@ import com.example.xpivo.data.response.DetailArticleResponse
 interface IArticlesRepository {
     suspend fun getArticles() : List<Article>
     suspend fun getDetailArticle(id: Int) : DetailArticleResponse
+    suspend fun getArticlesByUserId():List<DetailArticleResponse>
 }

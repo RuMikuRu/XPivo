@@ -17,14 +17,16 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun login(email: String, password: String, rememberMe: Boolean): Boolean {
-        val token = service.login(email, password).userToken
-        this.log("token = $token")
-        Log.d("UserRepository", "login: $token")
-        return if (token.isNotBlank()) {
+        val response = service.login(email, password)
+        this.log("token = ${response.userToken}")
+        Log.d("UserRepository", "login: $response")
+        return if (response.userToken.isNotBlank()) {
             if (rememberMe) {
-                dataStore.saveToken(token)
+                dataStore.saveToken(response.userToken)
+                dataStore.saveUserId(response.userId)
             } else {
-                FreeCache.token = token
+                FreeCache.token = response.userToken
+                FreeCache.userId = response.userId
             }
             true
         } else {

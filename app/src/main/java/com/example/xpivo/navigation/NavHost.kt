@@ -1,7 +1,5 @@
 package com.example.xpivo.navigation
 
-import android.util.Log
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -9,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.feature.articles_page.ArticlesPage
 import com.example.xpivo.feature.login_page.LoginPage
 import androidx.compose.runtime.getValue
@@ -17,12 +14,12 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.xpivo.feature.articles_page.detail_article_page.DetailArticlePage
 import com.example.xpivo.feature.registration_page.RegistrationPage
-import kotlinx.coroutines.flow.first
+import com.example.xpivo.feature.user_article_page.UserArticlePage
 
 @Composable
 fun PrimaryNavHost(
     viewModel: NavigationViewModel = hiltViewModel<NavigationViewModel>(),
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController
 ) {
     val authToken by viewModel.authToken.collectAsState()
     val uiState by viewModel.uiState.collectAsState()
@@ -31,8 +28,9 @@ fun PrimaryNavHost(
     } else {
         Screen.LoginPage.route
     }
+
     if (uiState) {
-        NavHost(navController, startDestination = startDestination) {
+        NavHost(navController = navController, startDestination = startDestination) {
             composable(Screen.LoginPage.route) {
                 LoginPage(
                     navController = navController,
@@ -56,6 +54,10 @@ fun PrimaryNavHost(
             ) { backStackEntry ->
                 val articleId = backStackEntry.arguments?.getInt("id") ?: return@composable
                 DetailArticlePage(articleId)
+            }
+
+            composable(Screen.UserArticlePage.route) {
+                UserArticlePage()
             }
         }
     }
