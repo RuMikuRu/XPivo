@@ -58,3 +58,9 @@ val TitleNavStyle = TextStyle(
     fontSize = 12.sp,
     fontWeight = FontWeight.Medium
 )
+
+val SmallTitleStyle = TextStyle(
+    fontSize = 14.sp,
+    fontWeight = FontWeight.Bold,
+    color = PrimaryBlack
+)
