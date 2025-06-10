@@ -4,14 +4,13 @@ import com.example.xpivo.core.AuthRequired
 import com.example.xpivo.data.request.LoginRequest
 import com.example.xpivo.data.request.RegisterRequest
 import com.example.xpivo.data.response.Article
+import com.example.xpivo.data.response.DetailArticleResponse
 import com.example.xpivo.data.response.LoginResponse
 import com.example.xpivo.data.response.RegisterResponse
-import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ServerApi {
     @POST("login")
@@ -27,4 +26,9 @@ interface ServerApi {
     @GET("articles")
     @AuthRequired
     suspend fun getArticles(): List<Article>
+
+    @GET("article/{id}")
+    @AuthRequired
+    suspend fun getArticleById(@Path("id") id: Int): DetailArticleResponse
+
 }

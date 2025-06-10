@@ -3,9 +3,11 @@ package com.example.xpivo.network
 import android.util.Log
 import com.example.xpivo.core.util.NetworkState
 import com.example.xpivo.data.model.User
+import com.example.xpivo.data.request.DetailArticleRequest
 import com.example.xpivo.data.request.LoginRequest
 import com.example.xpivo.data.request.RegisterRequest
 import com.example.xpivo.data.response.Article
+import com.example.xpivo.data.response.DetailArticleResponse
 import com.example.xpivo.data.response.LoginResponse
 import retrofit2.Call
 import java.io.IOException
@@ -41,7 +43,11 @@ class Service(
         }
     }
 
-    suspend fun getArticles() : List<Article> {
+    suspend fun getDetailArticle(id: Int): DetailArticleResponse {
+        return serverApi.getArticleById(id)
+    }
+
+    suspend fun getArticles(): List<Article> {
         return serverApi.getArticles()
     }
 }

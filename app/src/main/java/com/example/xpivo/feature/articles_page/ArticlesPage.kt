@@ -20,13 +20,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.response.Article
+import com.example.xpivo.navigation.Screen
 import com.example.xpivo.ui.components.PrimaryBasicTextField
 import com.example.xpivo.ui.components.PrimaryMiniArticleCard
 
 @Composable
-fun ArticlesPage(viewModel: ArticlesViewModel = hiltViewModel()) {
+fun ArticlesPage(navController: NavController, viewModel: ArticlesViewModel = hiltViewModel()) {
     val viewState by viewModel.articlesState.collectAsState()
     var query by rememberSaveable { mutableStateOf("") }
     LazyColumn {
@@ -49,11 +51,13 @@ fun ArticlesPage(viewModel: ArticlesViewModel = hiltViewModel()) {
         when (viewState) {
             is Lce.Content<List<Article>> -> {
                 val articles = (viewState as Lce.Content<List<Article>>).data
-                items(items = articles) { article ->
+                items(items = articles, key = {article -> article.id}) { article ->
                     PrimaryMiniArticleCard(
                         title = article.title ?: "",
                         dateTime = article.createdAt ?: ""
-                    )
+                    ) {
+                        navController.navigate(Screen.DetailArticlePage.createRoute(article.id))
+                    }
                 }
             }
 

@@ -13,6 +13,9 @@ import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.feature.articles_page.ArticlesPage
 import com.example.xpivo.feature.login_page.LoginPage
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+import com.example.xpivo.feature.articles_page.detail_article_page.DetailArticlePage
 import com.example.xpivo.feature.registration_page.RegistrationPage
 import kotlinx.coroutines.flow.first
 
@@ -45,7 +48,14 @@ fun PrimaryNavHost(
                 RegistrationPage(navController)
             }
             composable(Screen.ArticlesPage.route) {
-                ArticlesPage()
+                ArticlesPage(navController)
+            }
+            composable(
+                route = Screen.DetailArticlePage.route,
+                arguments = listOf(navArgument("id") { type = NavType.IntType })
+            ) { backStackEntry ->
+                val articleId = backStackEntry.arguments?.getInt("id") ?: return@composable
+                DetailArticlePage(articleId)
             }
         }
     }

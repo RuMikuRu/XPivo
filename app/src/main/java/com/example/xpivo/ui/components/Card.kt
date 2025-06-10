@@ -1,6 +1,7 @@
 package com.example.xpivo.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,11 +29,12 @@ import com.example.xpivo.ui.theme.SimpleShape
 import com.example.xpivo.ui.theme.SmallTextStyle
 
 @Composable
-fun PrimaryMiniArticleCard(title: String, dateTime: String) {
+fun PrimaryMiniArticleCard(title: String, dateTime: String, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
+            .clickable{onClick.invoke()},
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
