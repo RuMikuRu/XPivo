@@ -49,6 +49,10 @@ class DataStoreCache(private val context: Context) {
     }
 
     suspend fun clear() {
-        context.dataStore.edit { it.clear() }
+        context.dataStore.edit { preferences ->
+            preferences.remove(AUTH_Token)
+            preferences.remove(REMEMBER_ME)
+            preferences.remove(USER_ID)
+        }
     }
 }

@@ -40,7 +40,7 @@ import com.example.xpivo.ui.theme.LargeStyle
 import com.example.xpivo.ui.theme.PrimaryBeige
 import com.example.xpivo.ui.theme.SmallTextStyle
 
-private val GENDER = mapOf(0 to "Мужской", 1 to "Женский")
+val GENDER = mapOf(0 to "Мужской", 1 to "Женский")
 
 @Composable
 fun RegistrationPage(

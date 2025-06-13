@@ -3,6 +3,7 @@ package com.example.xpivo.data.repository.article_repository
 import android.util.Log
 import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.data.cache.FreeCache
+import com.example.xpivo.data.request.CreateArticleRequest
 import com.example.xpivo.data.response.Article
 import com.example.xpivo.data.response.DetailArticleResponse
 import com.example.xpivo.network.Service
@@ -29,5 +30,22 @@ class ArticlesRepositoryImpl @Inject constructor(
             return service.getArticleByUserId(id)
         }
         return listOf()
+    }
+
+    override suspend fun createArticle(
+        title: String,
+        body: String,
+        description: String,
+        status: String,
+        tags: List<String>
+    ) {
+        val request = CreateArticleRequest(
+            title = title,
+            body = body,
+            description = description,
+            status = "черновик",
+            tagIds = tags.map { it.toInt() }
+        )
+        service.createArticle(request)
     }
 }

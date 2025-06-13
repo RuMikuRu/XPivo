@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -36,6 +37,16 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
     val activity = LocalActivity.current
     val userState by viewModel.user.collectAsState()
 
+    val firstName by viewModel.firstName.collectAsState()
+    val lastName by viewModel.lastName.collectAsState()
+    val middleName by viewModel.middleName.collectAsState()
+    val email by viewModel.email.collectAsState()
+    val birthDate by viewModel.birthDate.collectAsState()
+
+    val oldPassword by viewModel.oldPassword.collectAsState()
+    val newPassword by viewModel.newPassword.collectAsState()
+    val confirmPassword by viewModel.confirmPassword.collectAsState()
+
     when (userState) {
         is Lce.Content<User?> -> {
             val userData = (userState as Lce.Content<User?>).data
@@ -48,48 +59,48 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
                 ImageProfile { }
 
                 PrimaryBasicTextField(
-                    value = userData?.firstName ?: "",
-                    onValueChange = { userData?.firstName = it },
+                    value = firstName,
+                    onValueChange = { viewModel.onFirstNameChange(it) },
                     title = "Фамилия",
                     placeholder = "Введите вашу фамилию"
                 )
                 PrimaryBasicTextField(
-                    value = viewModel.lastName,
-                    onValueChange = { viewModel.lastName = it },
+                    value = lastName,
+                    onValueChange = { viewModel.onLastNameChange(it) },
                     title = "Имя",
                     placeholder = "Введите ваше имя"
                 )
                 PrimaryBasicTextField(
-                    value = viewModel.middleName,
-                    onValueChange = { viewModel.middleName = it },
+                    value = middleName,
+                    onValueChange = { viewModel.onMiddleNameChange(it) },
                     title = "Отчество (опционально)",
                     placeholder = "Введите ваше отчество"
                 )
 
                 PrimaryBasicTextField(
-                    value = viewModel.email,
-                    onValueChange = { viewModel.email = it },
+                    value = email,
+                    onValueChange = { viewModel.onEmailChange(it) },
                     title = "Email",
                     placeholder = "Введите ваш email"
                 )
                 PrimaryPasswordTextField(
-                    value = viewModel.oldPassword,
+                    value = oldPassword,
                     placeholder = "Введите старый пароль",
-                    onValueChange = { viewModel.oldPassword = it })
+                    onValueChange = { viewModel.onOldPasswordChange(it) })
 
                 PrimaryPasswordTextField(
-                    value = viewModel.newPassword,
+                    value = newPassword,
                     placeholder = "Введите новый пароль",
-                    onValueChange = { viewModel.newPassword = it })
+                    onValueChange = { viewModel.onNewPasswordChange(it) })
 
                 PrimaryPasswordTextField(
-                    value = viewModel.confirmPassword,
+                    value = confirmPassword,
                     placeholder = "Подтвердите новый пароль",
-                    onValueChange = { viewModel.confirmPassword = it })
+                    onValueChange = { viewModel.onConfirmPasswordChange(it) })
 
                 PrimaryBasicTextField(
-                    value = viewModel.birthDate,
-                    onValueChange = { viewModel.birthDate = it },
+                    value = birthDate,
+                    onValueChange = { viewModel.onBirthDateChange(it) },
                     title = "день рождения",
                     placeholder = "Введите ваш день рождения",
                     trailingIcon = {
@@ -102,11 +113,21 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
                 )
                 PrimaryDropDownMenu(
                     titleContent = GENDER,
-                    onValueChange = { key, value -> viewModel.gender = value }
+                    onValueChange = { key, value ->
+                        viewModel.onGenderChange(
+                            when (key) {
+                                0 -> com.example.xpivo.data.model.Gender.MALE
+                                else -> com.example.xpivo.data.model.Gender.FEMALE
+                            }
+                        )
+                    }
                 )
                 ActionRowLayout {
-                    PrimaryButton(title = "Сохранить изменения", modifier = Modifier.fillMaxWidth()) {
-                        viewModel.registerUser()
+                    PrimaryButton(
+                        title = "Сохранить изменения",
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        viewModel.updateUser()
                     }
                     PrimaryButton(
                         title = "Закрыть",
@@ -116,14 +137,25 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
                         activity?.onBackPressed()
                     }
                 }
-                TextButton(onClick = {}) {
+                TextButton(onClick = {
+
+                }) {
                     Text(text = "Сохранить в PDF", style = SmallTitleStyle)
                 }
             }
         }
-        is Lce.Error -> TODO()
-        Lce.Loading -> TODO()
-        is Lce.Ready<*> -> TODO()
+
+        is Lce.Error -> {
+            Text(text = "Error loading user data")
+        }
+
+        Lce.Loading -> {
+            CircularProgressIndicator()
+        }
+
+        is Lce.Ready<*> -> {
+        }
+
     }
 
 

@@ -3,6 +3,7 @@ package com.example.xpivo.core.di
 import android.content.Context
 import com.example.xpivo.core.util.NetworkState
 import com.example.xpivo.data.cache.DataStoreCache
+import com.example.xpivo.data.cache.FreeCache
 import com.example.xpivo.data.repository.article_repository.ArticlesRepositoryImpl
 import com.example.xpivo.data.repository.article_repository.IArticlesRepository
 import com.example.xpivo.data.repository.user_repository.IUserRepository
@@ -38,7 +39,7 @@ object NetworkModule {
                 AuthInterceptor(
                     tokenProvider = {
                         runBlocking {
-                            dataStoreCache.tokenFlow.first()
+                            dataStoreCache.tokenFlow.first() ?: FreeCache.token
                         }
                     }
                 )

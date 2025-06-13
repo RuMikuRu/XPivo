@@ -1,5 +1,6 @@
 package com.example.xpivo.ui.components
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,7 +33,8 @@ import com.example.xpivo.ui.theme.TitleNavStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrimaryTopBar(title: String, type: TypeBar) {
+fun PrimaryTopBar(title: String, type: TypeBar, onClickAddArticle: () -> Unit = {}, onClickExit: () -> Unit = {}) {
+    val activity = LocalActivity.current
     TopAppBar(
         title = {
             Text(
@@ -44,29 +46,35 @@ fun PrimaryTopBar(title: String, type: TypeBar) {
         },
         navigationIcon = {
             if (type == TypeBar.EXIT) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_exit),
-                    tint = Color.Unspecified,
-                    contentDescription = null,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                IconButton(onClick = onClickExit) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_exit),
+                        tint = Color.Unspecified,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             } else if (type == TypeBar.SIMPLE) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_back_arrow),
-                    tint = Color.Unspecified,
-                    contentDescription = null,
-                    modifier = Modifier.padding(start = 16.dp)
-                )
+                IconButton(onClick = {activity?.onBackPressed()}) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_back_arrow),
+                        tint = Color.Unspecified,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 16.dp)
+                    )
+                }
             }
         },
         actions = {
             if (type == TypeBar.ADD) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_add),
-                    tint = Color.Unspecified,
-                    contentDescription = null,
-                    modifier = Modifier.padding(end = 16.dp)
-                )
+                IconButton(onClick = onClickAddArticle) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_add),
+                        tint = Color.Unspecified,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
             }
         },
         modifier = Modifier.fillMaxWidth(),
@@ -130,7 +138,7 @@ fun PrimaryNavBar(
                         contentDescription = null
                     )
                     Text(
-                        text = "Создать",
+                        text = "Мои статьи",
                         style = TitleNavStyle,
                         color = if (selected == SelectedMenuNavBar.ADD_ARTICLE) PrimaryBrown else PrimaryBlack,
                     )

@@ -1,6 +1,7 @@
 package com.example.xpivo.core.view_model
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -11,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 abstract class BaseViewModel(@ApplicationContext context: Context) : ViewModel() {
@@ -42,6 +45,9 @@ abstract class BaseViewModel(@ApplicationContext context: Context) : ViewModel()
         return state
     }
 
+    private val _unauthorizedEvent = MutableStateFlow<Boolean?>(null)
+    val unauthorizedEvent = _unauthorizedEvent.asStateFlow()
+
     protected fun launchSafely(
         dispatcher: CoroutineDispatcher = Dispatchers.IO,
         onError: (Throwable) -> Unit = { sendError(it) },
@@ -51,14 +57,32 @@ abstract class BaseViewModel(@ApplicationContext context: Context) : ViewModel()
             try {
                 block()
             } catch (e: Exception) {
-                onError(e)
+                if (e.isUnauthorized()) {
+                    Log.d("BaseViewModel", "launchSafely: ${e.printStackTrace()}")
+                    _unauthorizedEvent.update { true }
+                } else {
+                    onError(e)
+                }
             }
         }
     }
+    fun onUnauthorizedEventHandled() {
+        _unauthorizedEvent.value = null
+    }
+
 
     protected fun sendError(e: Throwable) {
         viewModelScope.launch {
             _event.emit(SingleEvent(e.message ?: "Неизвестная ошибка"))
+            _unauthorizedEvent.update { true }
+            if (e.isUnauthorized()) {
+                Log.d("BaseViewModel", "launchSafely: ${e.printStackTrace()}")
+                _unauthorizedEvent.update { true }
+            }
         }
     }
+}
+
+fun Throwable.isUnauthorized(): Boolean {
+    return this is retrofit2.HttpException && this.code() == 401
 }

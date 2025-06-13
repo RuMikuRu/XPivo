@@ -16,8 +16,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    repository: IUserRepository
+    val repository: IUserRepository
 ) : BaseViewModel(context) {
+
+    private val _user = MutableStateFlow<Lce<User?>>(Lce.Ready(null))
+    val user = _user.asStateFlow()
 
     private val _firstName = MutableStateFlow("")
     val firstName = _firstName.asStateFlow()
@@ -34,9 +37,6 @@ class ProfileViewModel @Inject constructor(
     private val _gender = MutableStateFlow(Gender.MALE)
     val gender = _gender.asStateFlow()
 
-    private val _userName = MutableStateFlow("")
-    val userName = _userName.asStateFlow()
-
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
 
@@ -52,9 +52,12 @@ class ProfileViewModel @Inject constructor(
     private val _rememberMe = MutableStateFlow(false)
     val rememberMe = _rememberMe.asStateFlow()
 
+    private val _userName = MutableStateFlow("")
+    val userName = _userName.asStateFlow()
+
 
     init {
-
+        getUser()
     }
 
     fun validatePassword(newPassword:String, confirmPassword:String): Boolean {
@@ -63,14 +66,54 @@ class ProfileViewModel @Inject constructor(
         return true
     }
 
+    fun getUser() {
+        launchSafely {
+            _user.value = Lce.Loading
+            try {
+                val loadedUser = repository.getUser()
+                _user.value = Lce.Content(loadedUser)
+                loadedUser.let {
+                    _firstName.value = it.firstName
+                    _lastName.value = it.lastName
+                    _middleName.value = it.middleName
+                    _birthDate.value = it.birthDate
+                    _gender.value = it.gender
+                    _email.value = it.email
+                    _userName.value = it.userName
+                    _rememberMe.value = it.rememberMe
+                }
+            } catch (e: Exception) {
+                _user.value = Lce.Error(e)
+                sendError(e)
+            }
+        }
+    }
+
+    fun updateUser() {
+        launchSafely {
+            if(_newPassword.value != "" && _confirmPassword.value == "") {
+                if (!validatePassword(
+                        _newPassword.value,
+                        _confirmPassword.value
+                    )
+                ) return@launchSafely
+            }
+            _user.value = Lce.Loading
+            repository.updateUser(buildUser())
+            getUser()
+        }
+
+    }
+
     fun onFirstNameChange(value: String) { _firstName.value = value }
     fun onLastNameChange(value: String) { _lastName.value = value }
     fun onMiddleNameChange(value: String) { _middleName.value = value }
     fun onBirthDateChange(value: String) { _birthDate.value = value }
     fun onGenderChange(value: Gender) { _gender.value = value }
-    fun onUserNameChange(value: String) { _userName.value = value }
     fun onEmailChange(value: String) { _email.value = value }
     fun onOldPasswordChange(value: String) { _oldPassword.value = value }
+    fun onNewPasswordChange(value: String) { _newPassword.value = value }
+    fun onConfirmPasswordChange(value: String) { _confirmPassword.value = value }
     fun onRememberMeChange(value: Boolean) { _rememberMe.value = value }
 
     fun buildUser(): User = User(
@@ -79,8 +122,8 @@ class ProfileViewModel @Inject constructor(
         middleName = _middleName.value,
         birthDate = _birthDate.value,
         gender = _gender.value,
-        userName = _userName.value,
         email = _email.value,
+        userName = _userName.value,
         password = _newPassword.value,
         rememberMe = _rememberMe.value
     )

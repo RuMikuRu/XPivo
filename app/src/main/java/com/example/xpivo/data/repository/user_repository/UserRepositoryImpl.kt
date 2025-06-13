@@ -6,6 +6,7 @@ import com.example.xpivo.data.cache.DataStoreCache
 import com.example.xpivo.data.cache.FreeCache
 import com.example.xpivo.data.model.User
 import com.example.xpivo.network.Service
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -32,5 +33,28 @@ class UserRepositoryImpl @Inject constructor(
         } else {
             false
         }
+    }
+
+    override suspend fun logout(): Boolean {
+        dataStore.clear()
+        FreeCache.clear()
+        val response =  service.logout()
+        if (response) {
+            dataStore.clear()
+            FreeCache.clear()
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override suspend fun getUser(): User {
+        val userId = dataStore.userId.first() ?: FreeCache.userId ?: throw Exception("No user id")
+        return service.getUserById(userId)
+    }
+
+    override suspend fun updateUser(user: User): User {
+        val userId = dataStore.userId.first() ?: FreeCache.userId ?: throw Exception("No user id")
+        return service.updateUser(userId.toLong(), user)
     }
 }

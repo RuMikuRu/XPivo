@@ -1,5 +1,6 @@
 package com.example.xpivo.data.response
 
+import com.example.xpivo.data.request.CreateArticleRequest
 import com.google.gson.annotations.SerializedName
 
 data class Article(
