@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.xpivo.R
+import com.example.xpivo.core.util.base64ToImageBitmap
 import com.example.xpivo.ui.theme.BoldStyle
 import com.example.xpivo.ui.theme.MediumStyle
 import com.example.xpivo.ui.theme.PrimaryWhite
@@ -29,7 +30,7 @@ import com.example.xpivo.ui.theme.SimpleShape
 import com.example.xpivo.ui.theme.SmallTextStyle
 
 @Composable
-fun PrimaryMiniArticleCard(title: String, dateTime: String, onClick: () -> Unit = {}) {
+fun PrimaryMiniArticleCard(title: String, dateTime: String, image: String?, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -38,14 +39,25 @@ fun PrimaryMiniArticleCard(title: String, dateTime: String, onClick: () -> Unit 
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Image(
-            painter = painterResource(R.drawable.pivo_image),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(100.dp, 56.dp)
-                .clip(SimpleShape)
-        )
+        if (!image.isNullOrBlank()) {
+            Image(
+                bitmap = base64ToImageBitmap(image)!!,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp, 56.dp)
+                    .clip(SimpleShape)
+            )
+        } else {
+            Image(
+                painter = painterResource(R.drawable.pivo_image),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp, 56.dp)
+                    .clip(SimpleShape)
+            )
+        }
         TextContentMiniCard(title = title, dateTime = dateTime)
     }
 }
@@ -59,7 +71,7 @@ private fun TextContentMiniCard(title: String, dateTime: String) {
 }
 
 @Composable
-fun PrimaryBigArticleCard(status: String, title: String, description: String) {
+fun PrimaryBigArticleCard(status: String, title: String, image: String?, description: String) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PrimaryWhite),
         shape = SimpleShape,
@@ -72,14 +84,25 @@ fun PrimaryBigArticleCard(status: String, title: String, description: String) {
                 title = title,
                 description = description
             )
-            Image(
-                painter = painterResource(R.drawable.pivo_image),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(119.dp, 216.dp)
-                    .clip(SimpleShape)
-            )
+            if (!image.isNullOrBlank()) {
+                Image(
+                    bitmap = base64ToImageBitmap(image)!!,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(119.dp, 216.dp)
+                        .clip(SimpleShape)
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.pivo_image),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(119.dp, 216.dp)
+                        .clip(SimpleShape)
+                )
+            }
         }
     }
 }
@@ -101,7 +124,7 @@ fun TextContentBigCard(
 @Composable
 @Preview
 private fun PreviewPrimaryMiniArticleCard() {
-    PrimaryMiniArticleCard(title = "Crafting the Perfect IPA", dateTime = "Published on 2023-08-15")
+    PrimaryMiniArticleCard(title = "Crafting the Perfect IPA", image = "",dateTime = "Published on 2023-08-15")
 }
 
 @Composable
@@ -110,6 +133,7 @@ private fun PreviewPrimaryBigArticleCard() {
     PrimaryBigArticleCard(
         status = "Submitted",
         title = "Crafting the Perfect Stout: A Brewer's Guide",
+        image = null,
         description = "Dive into the art of brewing a rich, flavorful stout. From selecting the right malts to mastering the fermentation process, this guide covers everything you need to know to create a stout that stands out."
     )
 }

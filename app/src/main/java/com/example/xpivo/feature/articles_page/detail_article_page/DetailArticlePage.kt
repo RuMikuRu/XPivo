@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.xpivo.core.util.base64ToImageBitmap
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.response.DetailArticleResponse
 import com.example.xpivo.ui.components.ImageArticle
@@ -35,7 +36,7 @@ fun DetailArticlePage(idArticle: Int, viewModel: DetailArticlePageViewModel = hi
             val detailArticle = (detailArticleState as Lce.Content<DetailArticleResponse?>).data
             detailArticle?.let { article ->
                 Column {
-                    ImageArticle()
+                    ImageArticle(if (article.images.isNotEmpty()) base64ToImageBitmap(article.images[0]) else null)
                     Text(
                         text = article.title,
                         style = ArticleStyle,

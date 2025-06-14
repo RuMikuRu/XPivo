@@ -41,7 +41,8 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
                         PrimaryBigArticleCard(
                             status = article.status,
                             title = article.title,
-                            description = article.description
+                            description = article.description,
+                            image = if (article.images.isNotEmpty()) article.images[0] else null
                         )
                     }
 
@@ -49,7 +50,8 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
                         PrimaryBigArticleCard(
                             status = article.status,
                             title = article.title,
-                            description = article.description
+                            description = article.description,
+                            image = if (article.images.isNotEmpty()) article.images[0] else null
                         )
                     }
                 }

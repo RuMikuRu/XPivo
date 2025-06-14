@@ -37,7 +37,8 @@ class ArticlesRepositoryImpl @Inject constructor(
         body: String,
         description: String,
         status: String,
-        tags: List<String>
+        tags: List<String>,
+        image: String
     ) {
         val request = CreateArticleRequest(
             title = title,
@@ -45,7 +46,7 @@ class ArticlesRepositoryImpl @Inject constructor(
             description = description,
             status = status,
             tagIds = tags.map { it.toInt() },
-            images = listOf()
+            images = listOf(image)
         )
         Log.d("ArticlesRepositoryImpl", "createArticle: $request, status = $status")
         service.createArticle(request)

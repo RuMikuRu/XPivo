@@ -9,9 +9,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -169,6 +171,7 @@ class ProfileViewModel @Inject constructor(
         rememberMe = _rememberMe.value
     )
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun saveProfileToPdfToDownloads() {
         viewModelScope.launch {
             val user = buildUser()

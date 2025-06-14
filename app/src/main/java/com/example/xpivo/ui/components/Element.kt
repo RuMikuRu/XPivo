@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Checkbox
@@ -78,6 +79,32 @@ fun ImageArticle(image: ImageBitmap? = null) {
         Image(
             painter = painterResource(R.drawable.image_profile_placeholder),
             modifier = Modifier.fillMaxWidth().height(320.dp),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+    } else {
+        Image(
+            bitmap = image,
+            modifier = Modifier.fillMaxWidth().height(320.dp),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+fun SmallImage(image: ImageBitmap? = null) {
+    if (image == null) {
+        Image(
+            painter = painterResource(R.drawable.image_profile_placeholder),
+            modifier = Modifier.size(64.dp),
+            contentScale = ContentScale.Crop,
+            contentDescription = null
+        )
+    } else {
+        Image(
+            bitmap = image,
+            modifier = Modifier.size(64.dp),
             contentScale = ContentScale.Crop,
             contentDescription = null
         )

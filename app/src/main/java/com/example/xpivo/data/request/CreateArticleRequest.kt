@@ -15,5 +15,5 @@ data class CreateArticleRequest(
     @SerializedName("tagIds")
     val tagIds: List<Int> = listOf(),
     @SerializedName("images")
-    val images: List<Byte> = listOf()
+    val images: List<String> = listOf()
 )

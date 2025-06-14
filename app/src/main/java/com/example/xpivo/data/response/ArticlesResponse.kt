@@ -21,7 +21,7 @@ data class Article(
     val tags: List<String> = emptyList(),
 
     @SerializedName("images")
-    val images: List<Image> = emptyList(),
+    val images: List<String> = emptyList(),
 
     @SerializedName("status")
     val status: String,
@@ -51,9 +51,4 @@ data class Author(
 
     @SerializedName("username")
     val username: String?
-)
-
-data class Image(
-    @SerializedName("id")
-    val id: Int?
 )

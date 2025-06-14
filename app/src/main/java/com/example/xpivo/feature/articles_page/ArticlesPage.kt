@@ -55,7 +55,8 @@ fun ArticlesPage(navController: NavController, viewModel: ArticlesViewModel = hi
                 items(items = articles.filter { article -> article.getStatus() == ArticleStatus.Published }, key = {article -> article.id}) { article ->
                     PrimaryMiniArticleCard(
                         title = article.title ?: "",
-                        dateTime = article.createdAt ?: ""
+                        dateTime = article.createdAt ?: "",
+                        image = if (article.images.isNotEmpty()) article.images[0] else null
                     ) {
                         navController.navigate(Screen.DetailArticlePage.createRoute(article.id))
                     }

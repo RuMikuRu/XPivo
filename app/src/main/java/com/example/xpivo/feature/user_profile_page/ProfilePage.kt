@@ -1,6 +1,7 @@
 package com.example.xpivo.feature.user_profile_page
 
 import android.net.Uri
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -57,6 +58,10 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
         uri?.let {
             viewModel.onImageSelected(it, activity!!)
         }
+    }
+
+    BackHandler {
+
     }
 
     when (userState) {
