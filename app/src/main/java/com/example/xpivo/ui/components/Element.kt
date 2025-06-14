@@ -3,6 +3,7 @@ package com.example.xpivo.ui.components
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -56,15 +57,18 @@ fun ImageProfile(image: ImageBitmap? = null, onClick: () -> Unit) {
     val modifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 16.dp)
+        .clickable {
+            onClick.invoke()
+        }
     if (image == null) {
         Image(
             painter = painterResource(R.drawable.image_profile_placeholder),
             modifier = modifier,
             contentScale = ContentScale.Crop,
-            contentDescription = null
+            contentDescription = null,
         )
     } else {
-        Image(bitmap = image, contentDescription = null)
+        Image(bitmap = image, contentDescription = null, modifier = Modifier.clickable {onClick.invoke()})
     }
 }
 

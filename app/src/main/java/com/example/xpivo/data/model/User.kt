@@ -31,6 +31,6 @@ fun User.toUserUpdateRequest(): UserUpdateRequest {
         email = email,
         username = userName,
         password = password,
-        photo = null
+        photo = photo ?: ""
     )
 }

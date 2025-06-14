@@ -25,7 +25,7 @@ data class UserUpdateRequest(
     val password: String? = null,
 
     @SerializedName("photo")
-    val photo: ByteArray? = null
+    val photo: String? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,17 +43,5 @@ data class UserUpdateRequest(
         if (!photo.contentEquals(other.photo)) return false
 
         return true
-    }
-
-    override fun hashCode(): Int {
-        var result = firstName.hashCode()
-        result = 31 * result + lastName.hashCode()
-        result = 31 * result + (middleName?.hashCode() ?: 0)
-        result = 31 * result + birthDate.hashCode()
-        result = 31 * result + email.hashCode()
-        result = 31 * result + username.hashCode()
-        result = 31 * result + (password?.hashCode() ?: 0)
-        result = 31 * result + (photo?.contentHashCode() ?: 0)
-        return result
     }
 }

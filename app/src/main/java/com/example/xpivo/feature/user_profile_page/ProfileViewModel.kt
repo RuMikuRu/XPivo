@@ -1,6 +1,14 @@
 package com.example.xpivo.feature.user_profile_page
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.net.Uri
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.lifecycle.viewModelScope
+import com.example.xpivo.core.util.base64ToImageBitmap
+import com.example.xpivo.core.util.imageBitmapToBase64
 import com.example.xpivo.core.view_model.BaseViewModel
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.model.Gender
@@ -11,6 +19,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,6 +64,9 @@ class ProfileViewModel @Inject constructor(
     private val _userName = MutableStateFlow("")
     val userName = _userName.asStateFlow()
 
+    private val _profileImage = MutableStateFlow<ImageBitmap?>(null)
+    val profileImage = _profileImage.asStateFlow()
+
 
     init {
         getUser()
@@ -65,6 +77,19 @@ class ProfileViewModel @Inject constructor(
         if (newPassword.length < 8) return false
         return true
     }
+
+    fun onImageSelected(uri: Uri, context: Context) {
+        viewModelScope.launch {
+            try {
+                val stream = context.contentResolver.openInputStream(uri)
+                val bitmap = BitmapFactory.decodeStream(stream)
+                _profileImage.value = bitmap.asImageBitmap()
+            } catch (e: Exception) {
+                // Обработка ошибки
+            }
+        }
+    }
+
 
     fun getUser() {
         launchSafely {
@@ -81,6 +106,7 @@ class ProfileViewModel @Inject constructor(
                     _email.value = it.email
                     _userName.value = it.userName
                     _rememberMe.value = it.rememberMe
+                    _profileImage.value = it.photo?.let { base64 -> base64ToImageBitmap(base64) }
                 }
             } catch (e: Exception) {
                 _user.value = Lce.Error(e)
@@ -117,6 +143,7 @@ class ProfileViewModel @Inject constructor(
     fun onRememberMeChange(value: Boolean) { _rememberMe.value = value }
 
     fun buildUser(): User = User(
+        photo = _profileImage.value?.let { imageBitmapToBase64(it) } ?: "",
         firstName = _firstName.value,
         lastName = _lastName.value,
         middleName = _middleName.value,

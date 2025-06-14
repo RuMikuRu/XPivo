@@ -1,6 +1,9 @@
 package com.example.xpivo.feature.user_profile_page
 
+import android.net.Uri
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -46,6 +49,15 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
     val oldPassword by viewModel.oldPassword.collectAsState()
     val newPassword by viewModel.newPassword.collectAsState()
     val confirmPassword by viewModel.confirmPassword.collectAsState()
+    val profileImage by viewModel.profileImage.collectAsState()
+
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            viewModel.onImageSelected(it, activity!!)
+        }
+    }
 
     when (userState) {
         is Lce.Content<User?> -> {
@@ -56,7 +68,9 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                ImageProfile { }
+                ImageProfile(image = profileImage) {
+                    imagePickerLauncher.launch("image/*")
+                }
 
                 PrimaryBasicTextField(
                     value = firstName,
