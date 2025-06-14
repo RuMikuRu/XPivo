@@ -1,5 +1,6 @@
 package com.example.xpivo.data.response
 
+import com.example.xpivo.data.model.ArticleStatus
 import com.example.xpivo.data.request.CreateArticleRequest
 import com.google.gson.annotations.SerializedName
 
@@ -22,6 +23,9 @@ data class Article(
     @SerializedName("images")
     val images: List<Image> = emptyList(),
 
+    @SerializedName("status")
+    val status: String,
+
     @SerializedName("createdAt")
     val createdAt: String?,
 
@@ -30,7 +34,16 @@ data class Article(
 
     @SerializedName("updatedAt")
     val updatedAt: String?
-)
+) {
+    fun getStatus(): ArticleStatus {
+        return when (this.status) {
+            "черновик" -> return ArticleStatus.Draft
+            "опубликована" -> return ArticleStatus.Published
+            "На рассмотрении" -> return ArticleStatus.Review
+            else -> {return ArticleStatus.Draft}
+        }
+    }
+}
 
 data class Author(
     @SerializedName("id")

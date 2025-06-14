@@ -34,7 +34,7 @@ data class DetailArticleResponse(
     fun getStatus(): ArticleStatus {
         when (this.status) {
             "черновик" -> return ArticleStatus.Draft
-            "опубликовано" -> return ArticleStatus.Published
+            "опубликована" -> return ArticleStatus.Published
             "На рассмотрении" -> return ArticleStatus.Review
         }
         return ArticleStatus.Draft

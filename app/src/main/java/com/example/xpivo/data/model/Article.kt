@@ -12,8 +12,8 @@ data class Article(
     val images: List<ImageBitmap>,
 )
 
-enum class ArticleStatus(value: String) {
+enum class ArticleStatus(val value: String) {
     Draft("черновик"),
-    Published("опубликовано"),
+    Published("опубликована"),
     Review("На рассмотрении")
 }

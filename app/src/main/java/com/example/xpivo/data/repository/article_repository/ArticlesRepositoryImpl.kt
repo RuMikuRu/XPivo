@@ -43,9 +43,11 @@ class ArticlesRepositoryImpl @Inject constructor(
             title = title,
             body = body,
             description = description,
-            status = "черновик",
-            tagIds = tags.map { it.toInt() }
+            status = status,
+            tagIds = tags.map { it.toInt() },
+            images = listOf()
         )
+        Log.d("ArticlesRepositoryImpl", "createArticle: $request, status = $status")
         service.createArticle(request)
     }
 }

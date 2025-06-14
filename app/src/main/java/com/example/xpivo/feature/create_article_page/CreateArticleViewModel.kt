@@ -2,6 +2,7 @@ package com.example.xpivo.feature.create_article_page
 
 import android.content.Context
 import com.example.xpivo.core.view_model.BaseViewModel
+import com.example.xpivo.data.model.ArticleStatus
 import com.example.xpivo.data.repository.article_repository.IArticlesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -29,8 +30,35 @@ class CreateArticleViewModel @Inject constructor(
         _articleText.value = text
     }
 
-    fun createArticle() {
-
+    fun createArticlePublished(){
+        launchSafely {
+            try {
+                repository.createArticle(
+                    title = _articleTitle.value,
+                    body = _articleText.value,
+                    description = _articleText.value,
+                    status = ArticleStatus.Published.value,
+                    tags = listOf()
+                )
+            } catch (e: Exception) {
+                sendError(e)
+            }
+        }
     }
 
+    fun createArticleDraft(){
+        launchSafely {
+            try {
+                repository.createArticle(
+                    title = _articleTitle.value,
+                    body = _articleText.value,
+                    description = _articleText.value,
+                    status = ArticleStatus.Draft.value,
+                    tags = listOf()
+                )
+            } catch (e: Exception) {
+                sendError(e)
+            }
+        }
+    }
 }

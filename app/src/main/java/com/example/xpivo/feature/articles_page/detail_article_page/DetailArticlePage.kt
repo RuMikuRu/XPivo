@@ -55,7 +55,7 @@ fun DetailArticlePage(idArticle: Int, viewModel: DetailArticlePageViewModel = hi
                         }
                     }
                     Text(
-                        text = "In the heart of our brewery, we blend tradition with innovation to create beers that tell a story. From selecting the finest ingredients to the meticulous brewing process, every step is a testament to our commitment to quality. Our brewers, artisans in their own right, experiment with flavors and techniques, pushing boundaries while honoring the rich heritage of brewing. This dedication results in a diverse range of beers, each with its unique character and taste profile, inviting you to explore the depths of flavor and craftsmanship.",
+                        text = detailArticle.body,
                         modifier = Modifier.padding(vertical = 12.dp)
                     )
                 }

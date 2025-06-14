@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.xpivo.data.model.ArticleStatus
 import com.example.xpivo.ui.components.ActionRowLayout
 import com.example.xpivo.ui.components.PrimaryBasicTextField
 import com.example.xpivo.ui.components.PrimaryBigTextField
@@ -32,8 +33,10 @@ fun CreateArticlePage(viewModel: CreateArticleViewModel = hiltViewModel()) {
             PrimaryBigTextField(value = textArticle) {it -> viewModel.updateArticleText(it) }
         }
         ActionRowLayout {
-            PrimaryButton(title = "Сохранить черновик", colorType = PrimaryBeige) { }
-            PrimaryButton(title = "Опубликовать") { }
+            PrimaryButton(title = "Сохранить черновик", colorType = PrimaryBeige) {
+                viewModel.createArticleDraft()
+            }
+            PrimaryButton(title = "Опубликовать") { viewModel.createArticlePublished()}
         }
     }
 }

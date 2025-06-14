@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.xpivo.core.view_model.Lce
+import com.example.xpivo.data.model.ArticleStatus
 import com.example.xpivo.data.response.Article
 import com.example.xpivo.navigation.Screen
 import com.example.xpivo.ui.components.PrimaryBasicTextField
@@ -51,7 +52,7 @@ fun ArticlesPage(navController: NavController, viewModel: ArticlesViewModel = hi
         when (viewState) {
             is Lce.Content<List<Article>> -> {
                 val articles = (viewState as Lce.Content<List<Article>>).data
-                items(items = articles, key = {article -> article.id}) { article ->
+                items(items = articles.filter { article -> article.getStatus() == ArticleStatus.Published }, key = {article -> article.id}) { article ->
                     PrimaryMiniArticleCard(
                         title = article.title ?: "",
                         dateTime = article.createdAt ?: ""
