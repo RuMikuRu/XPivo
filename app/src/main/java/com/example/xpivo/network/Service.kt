@@ -31,7 +31,8 @@ class Service(
             username = user.userName,
             email = user.email,
             passwordHash = user.password,
-            rememberMe = user.rememberMe
+            rememberMe = user.rememberMe,
+            photo = user.photo
         )
         serverApi.register(request)
     }

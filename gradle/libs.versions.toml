@@ -1,7 +1,9 @@
 [versions]
 accompanistFlowlayout = "0.34.0"
 agp = "8.9.3"
+androidCore = "3.3.0"
 converterGson = "2.11.0"
+core = "3.5.2"
 dagger = "2.55"
 datastorePreferences = "1.1.7"
 gson = "2.13.1"
@@ -22,10 +24,12 @@ hiltAndroid = "2.55"
 
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayout" }
+android-core = { module = "com.google.zxing:android-core", version.ref = "androidCore" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+core = { module = "com.google.zxing:core", version.ref = "core" }
 dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }

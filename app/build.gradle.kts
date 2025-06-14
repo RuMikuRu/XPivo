@@ -44,6 +44,8 @@ android {
 dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.datastore.preferences)
+    implementation (libs.core)
+    implementation (libs.android.core)
     implementation(libs.hilt.android)
     implementation(libs.converter.gson)
     implementation(libs.dagger)

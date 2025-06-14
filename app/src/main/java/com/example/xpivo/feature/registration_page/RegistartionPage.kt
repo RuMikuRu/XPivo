@@ -1,7 +1,10 @@
 package com.example.xpivo.feature.registration_page
 
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.LocalActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +53,16 @@ fun RegistrationPage(
     val registrationState by viewModel.registrationState.collectAsState()
     val activity = LocalActivity.current
 
+    val imagePickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            viewModel.onImageSelected(it, activity!!)
+        }
+    }
+
+    val profileImage by viewModel.profileImage.collectAsState()
+
     // Переход при успешной регистрации
     LaunchedEffect(registrationState) {
         if (registrationState is Lce.Content) {
@@ -93,7 +106,9 @@ fun RegistrationPage(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "Фото профиля", style = LargeStyle)
-                ImageProfile { }
+                ImageProfile(image = profileImage) {
+                    imagePickerLauncher.launch("image/*")
+                }
                 Text(text = "Макс. размер: 2MB", style = SmallTextStyle)
 
                 PrimaryBasicTextField(

@@ -152,7 +152,7 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
                     }
                 }
                 TextButton(onClick = {
-
+                    viewModel.saveProfileToPdfToDownloads()
                 }) {
                     Text(text = "Сохранить в PDF", style = SmallTitleStyle)
                 }

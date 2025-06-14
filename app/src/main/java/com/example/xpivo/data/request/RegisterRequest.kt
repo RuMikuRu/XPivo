@@ -28,5 +28,7 @@ data class RegisterRequest(
     val passwordHash: String,
 
     @SerializedName("rememberMe")
-    val rememberMe: Boolean
+    val rememberMe: Boolean,
+    @SerializedName("photo")
+    val photo: String? = null
 )

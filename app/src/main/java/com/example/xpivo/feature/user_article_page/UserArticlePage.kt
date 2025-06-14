@@ -1,5 +1,7 @@
 package com.example.xpivo.feature.user_article_page
 
+import android.R
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -15,10 +17,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.response.DetailArticleResponse
+import com.example.xpivo.ui.theme.TitleStyle
 
 @Composable
 fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
@@ -53,7 +57,9 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
 
             is Lce.Error -> {
                 item {
-                    Text(text = "Error")
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(text = "Тут пусто", style = TitleStyle)
+                    }
                 }
             }
 

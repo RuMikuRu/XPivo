@@ -1,8 +1,17 @@
 package com.example.xpivo.feature.user_profile_page
 
+import android.content.ContentValues
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
@@ -14,13 +23,18 @@ import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.model.Gender
 import com.example.xpivo.data.model.User
 import com.example.xpivo.data.repository.user_repository.IUserRepository
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import javax.inject.Inject
+import androidx.core.graphics.scale
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -154,4 +168,92 @@ class ProfileViewModel @Inject constructor(
         password = _newPassword.value,
         rememberMe = _rememberMe.value
     )
+
+    fun saveProfileToPdfToDownloads() {
+        viewModelScope.launch {
+            val user = buildUser()
+            val fullName = "${user.lastName} ${user.firstName} ${user.middleName}"
+            val birth = user.birthDate
+            val gender = when (user.gender) {
+                Gender.MALE -> "Мужской"
+                Gender.FEMALE -> "Женский"
+            }
+
+            val qrText = "$fullName\n$birth\n$gender"
+            val qrBitmap = generateQrCode(qrText)
+
+            val pdfDocument = PdfDocument()
+            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+            val page = pdfDocument.startPage(pageInfo)
+            val canvas: Canvas = page.canvas
+            val paint = Paint()
+
+            paint.textSize = 18f
+            canvas.drawText("Профиль пользователя", 40f, 50f, paint)
+
+            paint.textSize = 14f
+            var y = 100f
+            canvas.drawText("ФИО: $fullName", 40f, y, paint); y += 30
+            canvas.drawText("Дата рождения: $birth", 40f, y, paint); y += 30
+            canvas.drawText("Пол: $gender", 40f, y, paint); y += 50
+
+            qrBitmap?.let {
+                val resized = it.scale(200, 200)
+                canvas.drawBitmap(resized, 40f, y, paint)
+            }
+
+            pdfDocument.finishPage(page)
+
+            val filename = "profile_${System.currentTimeMillis()}.pdf"
+            val mimeType = "application/pdf"
+
+            val contentValues = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, filename)
+                put(MediaStore.Downloads.MIME_TYPE, mimeType)
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val resolver = context.contentResolver
+            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+            try {
+                uri?.let {
+                    resolver.openOutputStream(it)?.use { outputStream ->
+                        pdfDocument.writeTo(outputStream)
+                    }
+                    Toast.makeText(context, "PDF сохранён в Загрузки", Toast.LENGTH_LONG).show()
+                } ?: run {
+                    Toast.makeText(context, "Ошибка при создании PDF", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(context, "Ошибка сохранения: ${e.message}", Toast.LENGTH_LONG).show()
+            } finally {
+                pdfDocument.close()
+            }
+        }
+    }
+
+    private fun generateQrCode(text: String): Bitmap? {
+        return try {
+            val size = 512
+            val bitMatrix = MultiFormatWriter().encode(
+                text, BarcodeFormat.QR_CODE, size, size, null
+            )
+            val width = bitMatrix.width
+            val height = bitMatrix.height
+            val pixels = IntArray(width * height)
+
+            for (y in 0 until height) {
+                for (x in 0 until width) {
+                    val black = Color.BLACK
+                    val white = Color.WHITE
+                    pixels[y * width + x] = if (bitMatrix.get(x, y)) black else white
+                }
+            }
+
+            Bitmap.createBitmap(pixels, 0, width, width, height, Bitmap.Config.RGB_565)
+        } catch (e: Exception) {
+            null
+        }
+    }
 }
