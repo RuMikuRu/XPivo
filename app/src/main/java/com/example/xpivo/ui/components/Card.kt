@@ -30,12 +30,17 @@ import com.example.xpivo.ui.theme.SimpleShape
 import com.example.xpivo.ui.theme.SmallTextStyle
 
 @Composable
-fun PrimaryMiniArticleCard(title: String, dateTime: String, image: String?, onClick: () -> Unit = {}) {
+fun PrimaryMiniArticleCard(
+    title: String,
+    dateTime: String,
+    image: String?,
+    onClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp)
-            .clickable{onClick.invoke()},
+            .clickable { onClick.invoke() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -71,11 +76,19 @@ private fun TextContentMiniCard(title: String, dateTime: String) {
 }
 
 @Composable
-fun PrimaryBigArticleCard(status: String, title: String, image: String?, description: String) {
+fun PrimaryBigArticleCard(
+    status: String,
+    title: String,
+    image: String?,
+    description: String,
+    onClick: () -> Unit = {}
+) {
     Card(
         colors = CardDefaults.cardColors(containerColor = PrimaryWhite),
         shape = SimpleShape,
-        modifier = Modifier.padding(vertical = 12.dp)
+        modifier = Modifier.padding(vertical = 12.dp).clickable {
+            onClick.invoke()
+        }
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             TextContentBigCard(
@@ -124,7 +137,11 @@ fun TextContentBigCard(
 @Composable
 @Preview
 private fun PreviewPrimaryMiniArticleCard() {
-    PrimaryMiniArticleCard(title = "Crafting the Perfect IPA", image = "",dateTime = "Published on 2023-08-15")
+    PrimaryMiniArticleCard(
+        title = "Crafting the Perfect IPA",
+        image = "",
+        dateTime = "Published on 2023-08-15"
+    )
 }
 
 @Composable

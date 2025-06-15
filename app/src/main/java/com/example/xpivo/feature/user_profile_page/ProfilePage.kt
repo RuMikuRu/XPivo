@@ -1,16 +1,23 @@
 package com.example.xpivo.feature.user_profile_page
 
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -25,6 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.xpivo.R
 import com.example.xpivo.feature.registration_page.GENDER
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.model.User
 import com.example.xpivo.ui.components.ActionRowLayout
@@ -36,8 +47,10 @@ import com.example.xpivo.ui.components.PrimaryPasswordTextField
 import com.example.xpivo.ui.theme.PrimaryBeige
 import com.example.xpivo.ui.theme.SmallTitleStyle
 
+@RequiresApi(Build.VERSION_CODES.Q)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
+fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel(), navController: NavController) {
     val activity = LocalActivity.current
     val userState by viewModel.user.collectAsState()
 
@@ -52,6 +65,8 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
     val confirmPassword by viewModel.confirmPassword.collectAsState()
     val profileImage by viewModel.profileImage.collectAsState()
 
+    var alertDialogState by remember { mutableStateOf(false) }
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -61,7 +76,29 @@ fun ProfilePage(viewModel: ProfileViewModel = hiltViewModel()) {
     }
 
     BackHandler {
+        alertDialogState = true
+    }
 
+    if (alertDialogState) {
+        BasicAlertDialog(
+            onDismissRequest = { alertDialogState = !alertDialogState },
+            modifier = Modifier.background(Color.White)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "Вы точно хотите выйти без сохранения?")
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    PrimaryButton(title = "Отмена") {
+                        alertDialogState = !alertDialogState
+                    }
+                    PrimaryButton(title = "Да") {
+                        navController.popBackStack()
+                    }
+                }
+            }
+        }
     }
 
     when (userState) {

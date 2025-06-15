@@ -1,9 +1,11 @@
 package com.example.xpivo
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -30,6 +32,7 @@ import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.Q)
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +44,7 @@ class MainActivity : ComponentActivity() {
             val currentRoute = navBackStackEntry?.destination?.route
 
             val showBottomBar = currentRoute != Screen.LoginPage.route &&
-                    currentRoute != Screen.RegistrationPage.route
+                    currentRoute != Screen.RegistrationPage.route && currentRoute != Screen.CreateArticlePage.route
             val viewModel: MainViewModel = hiltViewModel()
 
             val logoutState by viewModel.logoutResult.collectAsState(initial = null)

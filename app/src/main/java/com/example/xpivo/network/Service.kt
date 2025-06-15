@@ -72,6 +72,10 @@ class Service(
         return serverApi.getArticles()
     }
 
+    suspend fun updateArticle(id: Int, article: CreateArticleRequest) {
+        serverApi.updateArticle(id, article)
+    }
+
     suspend fun getArticleByUserId(id: Int): List<DetailArticleResponse> {
         return serverApi.getArticlesByAuthorId(id)
     }

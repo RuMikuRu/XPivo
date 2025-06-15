@@ -51,4 +51,25 @@ class ArticlesRepositoryImpl @Inject constructor(
         Log.d("ArticlesRepositoryImpl", "createArticle: $request, status = $status")
         service.createArticle(request)
     }
+
+    override suspend fun updateArticle(
+        id: Int,
+        title: String,
+        body: String,
+        description: String,
+        status: String,
+        tags: List<String>,
+        image: String
+    ) {
+        val request = CreateArticleRequest(
+            title = title,
+            body = body,
+            description = description,
+            status = status,
+            tagIds = tags.map { it.toInt() },
+            images = listOf(image)
+        )
+        Log.d("ArticlesRepositoryImpl", "createArticle: $request, status = $status")
+        service.updateArticle(id, request)
+    }
 }

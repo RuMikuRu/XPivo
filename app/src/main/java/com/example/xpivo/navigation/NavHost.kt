@@ -1,7 +1,10 @@
 package com.example.xpivo.navigation
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,10 +17,12 @@ import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.xpivo.feature.articles_page.detail_article_page.DetailArticlePage
 import com.example.xpivo.feature.create_article_page.CreateArticlePage
+import com.example.xpivo.feature.create_article_page.CreateArticleViewModel
 import com.example.xpivo.feature.registration_page.RegistrationPage
 import com.example.xpivo.feature.user_article_page.UserArticlePage
 import com.example.xpivo.feature.user_profile_page.ProfilePage
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun PrimaryNavHost(
     viewModel: NavigationViewModel = hiltViewModel<NavigationViewModel>(),
@@ -54,22 +59,46 @@ fun PrimaryNavHost(
             }
             composable(
                 route = Screen.DetailArticlePage.route,
-                arguments = listOf(navArgument("id") { type = NavType.IntType })
+                arguments = listOf(
+                    navArgument("id") { type = NavType.IntType },
+                    navArgument("status") {
+                        type =
+                            NavType.BoolType
+                    })
             ) { backStackEntry ->
                 val articleId = backStackEntry.arguments?.getInt("id") ?: return@composable
-                DetailArticlePage(articleId)
+                val status = backStackEntry.arguments?.getBoolean("status") ?: return@composable
+                DetailArticlePage(articleId, status)
             }
 
             composable(Screen.UserArticlePage.route) {
-                UserArticlePage()
+                UserArticlePage(navController = navController)
             }
 
             composable(Screen.ProfilePage.route) {
-                ProfilePage()
+                ProfilePage(navController = navController)
             }
 
-            composable(Screen.CreateArticlePage.route) {
-                CreateArticlePage()
+            composable(
+                route = Screen.CreateArticlePage.route,
+                arguments = listOf(
+                    navArgument("articleId") {
+                        type = NavType.IntType
+                        defaultValue = -1
+                        nullable = false
+                    }
+                )
+            ) { backStackEntry ->
+                val articleId = backStackEntry.arguments?.getInt("articleId")
+                val viewModel = hiltViewModel<CreateArticleViewModel>()
+
+                LaunchedEffect(articleId) {
+                    if (articleId != null && articleId != -1 && viewModel.editableArticle.value == null) {
+                        viewModel.loadArticleForEdit(articleId)
+                    }
+                }
+
+                CreateArticlePage(viewModel, navController)
             }
         }
     }

@@ -50,4 +50,18 @@ class ArticlesViewModel @Inject constructor(
             }
         }
     }
+
+    fun filterList() {
+        launchSafely {
+            _articlesState.value = Lce.Loading
+            try {
+                val articles = articlesRepository.getArticles()
+                    .reversed()
+                _articlesState.value = Lce.Content(articles)
+            } catch (e: Exception) {
+                _articlesState.value = Lce.Error(e)
+                sendError(e)
+            }
+        }
+    }
 }

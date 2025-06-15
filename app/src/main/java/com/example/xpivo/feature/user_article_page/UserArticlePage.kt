@@ -20,12 +20,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.xpivo.core.view_model.Lce
 import com.example.xpivo.data.response.DetailArticleResponse
+import com.example.xpivo.navigation.Screen
 import com.example.xpivo.ui.theme.TitleStyle
 
 @Composable
-fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
+fun UserArticlePage(
+    viewModel: UserArticlesViewModel = hiltViewModel(),
+    navController: NavController
+) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     val articles by viewModel.articles.collectAsState()
 
@@ -43,7 +48,14 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
                             title = article.title,
                             description = article.description,
                             image = if (article.images.isNotEmpty()) article.images[0] else null
-                        )
+                        ) {
+                            navController.navigate(
+                                Screen.DetailArticlePage.createRoute(
+                                    article.id,
+                                    true
+                                )
+                            )
+                        }
                     }
 
                     1 -> items(items = articlesData.filter { article -> article.getStatus() == ArticleStatus.Draft }) { article ->
@@ -52,7 +64,9 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
                             title = article.title,
                             description = article.description,
                             image = if (article.images.isNotEmpty()) article.images[0] else null
-                        )
+                        ) {
+                            navController.navigate(Screen.CreateArticlePage.createRoute(article.id))
+                        }
                     }
                 }
             }
@@ -84,5 +98,5 @@ fun UserArticlePage(viewModel: UserArticlesViewModel = hiltViewModel()) {
 @Composable
 @Preview
 private fun PreviewUserArticlePage() {
-    UserArticlePage()
+    //UserArticlePage()
 }

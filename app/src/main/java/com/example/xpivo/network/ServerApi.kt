@@ -50,4 +50,8 @@ interface ServerApi {
     @GET("article/author/{authorId}")
     @AuthRequired
     suspend fun getArticlesByAuthorId(@Path("authorId") authorId: Int): List<DetailArticleResponse>
+
+    @PUT("article/{id}")
+    @AuthRequired
+    suspend fun updateArticle(@Path("id") id:Int , @Body request: CreateArticleRequest)
 }
